@@ -7,7 +7,7 @@ export interface IImage extends Document {
   secureUrl: string;
   width?: number;
   height?: number;
-  config?: Record<string, any>;
+  config?: Record<string, string | number | boolean>;
   transformationUrl?: string;
   aspectRatio?: string;
   color?: string;
