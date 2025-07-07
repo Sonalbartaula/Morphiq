@@ -28,6 +28,5 @@ export const connectToDatabase = async () => {
     mongoose.connect(MONGODB_URL, { dbName: "morphiq", bufferCommands: false });
 
   cached.conn = await cached.promise;
-
   return cached.conn;
 };
