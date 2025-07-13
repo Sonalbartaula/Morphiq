@@ -8,7 +8,7 @@ interface CustomFieldProps {
     control: Control<z.infer<typeof formSchema>> | undefined;
     render: (props: {field: any}) => ReactNode;
     name: keyof z.infer<typeof formSchema>;
-    formLabel: string;
+    formLabel?: string;
     className: string;
 }
 
