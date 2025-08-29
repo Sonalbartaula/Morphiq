@@ -4,7 +4,7 @@ export interface IImage extends Document {
    title: string;
   transformationType: string;
   publicId: string;
-  secureUrl: string;
+  secureURL: string;
   width?: number;
   height?: number;
   config?: Record<string, string | number | boolean>;
@@ -35,8 +35,8 @@ const ImageSchema = new Schema({
     type: String,
     required: true,
   },
-  secureUrl: {
-    type: URL,
+  secureURL: {
+    type: String,
     required: true,
   },
   width: {
@@ -49,7 +49,7 @@ const ImageSchema = new Schema({
     type: Object,
   },
   transformationUrl: {
-    type: URL,
+    type: String,
   },
   aspectRatio: {
     type: String,

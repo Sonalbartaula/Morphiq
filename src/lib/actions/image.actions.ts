@@ -6,11 +6,12 @@ import { handleError } from "../utils";
 import Image from "../database/models/image.model";
 import User from "../database/models/user.model";
 import { redirect } from "next/navigation";
+import {v2 as cloudinary} from "cloudinary";
 
 const populateUser = (query: any) => query.populate({
     path: "author",
     model: User,
-    select: "_id firstName lastName"
+    select: "_id firstName lastName clerkId"
 })
 
 //ADD IMAGE
@@ -97,4 +98,47 @@ export async function getImageById(imageId: string) {
             handleError(error)
         }
     
+}
+
+//GET IMAGES
+export async function getAllImages({
+  limit = 9,
+  page = 1,
+  searchQuery = "",
+}: {
+  limit?: number;
+  page: number;
+  searchQuery?: string;
+}) {
+  try {
+    await connectToDatabase();
+
+    // Build MongoDB query
+    let query: any = {};
+    if (searchQuery) {
+      // Search by title (case-insensitive)
+      query.title = { $regex: searchQuery, $options: "i" };
+    }
+
+    const skipAmount = (Number(page) - 1) * limit;
+
+    // Fetch paginated images
+    const images = await populateUser(
+      Image.find(query).sort({ updatedAt: -1 }).skip(skipAmount).limit(limit)
+    );
+
+    // Total images matching search
+    const totalImages = await Image.find(query).countDocuments();
+
+    // Total images saved in DB (all-time)
+    const savedImages = await Image.find().countDocuments();
+
+    return {
+      data: JSON.parse(JSON.stringify(images)),
+      totalPage: Math.ceil(totalImages / limit),
+      savedImages,
+    };
+  } catch (error) {
+    handleError(error);
+  }
 }
